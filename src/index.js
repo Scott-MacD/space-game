@@ -55,8 +55,8 @@ canvas.addEventListener("mouseup", e => mouseDown = false);
 canvas.addEventListener("mouseleave", e => mouseDown = false);
 canvas.addEventListener("mousemove", e => {
     if (!mouseDown) return;
-    camera.x += e.movementX;
-    camera.y += e.movementY;
+    camera.x -= e.movementX;
+    camera.y -= e.movementY;
     camera.clear();
     camera.render(world);
     camera.drawCenter();
