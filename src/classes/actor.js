@@ -1,9 +1,15 @@
 import Box2 from "./box2.js";
 import { define } from "../lib/record.js";
 
+export const SCREEN_POS = {
+    RELATIVE: Symbol(),
+    ABSOLUTE: Symbol()
+}
+
 const Actor = define("Actor", Box2, {
 
     childActors: null,
+    screenPos: SCREEN_POS.RELATIVE,
 
     addActor(child) {
         if (!this.childActors) this.childActors = [];

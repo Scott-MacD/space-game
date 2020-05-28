@@ -1,5 +1,6 @@
 import { define } from "../lib/record.js";
 import Entity from "./entity.js";
+import { SCREEN_POS } from "./actor.js";
 
 const World = define("World", Entity, {
 
@@ -13,9 +14,11 @@ const World = define("World", Entity, {
     minExploredY: 0,
     maxExploredY: 0,
 
+    screenPos: SCREEN_POS.ABSOLUTE,
+
     render(deltaT, {ctx, width, height, offset}) {
         ctx.fillStyle = "#000";
-        ctx.fillRect(-offset.x, -offset.y, width, height);
+        ctx.fillRect(0, 0, width, height);
     }
 
 });

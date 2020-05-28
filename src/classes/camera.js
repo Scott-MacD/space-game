@@ -1,6 +1,7 @@
 import { define } from "../lib/record.js";
 import Box2, {boxCollides} from "./box2.js";
 import Vec2 from "./vec2.js";
+import { SCREEN_POS } from "./actor.js";
 
 const Camera = define("Camera", Box2, {
 
@@ -13,7 +14,6 @@ const Camera = define("Camera", Box2, {
     maxY: Infinity,
 
     offset: null,
-    viewbox: null,
 
     _x: 0,
     _y: 0,
@@ -23,12 +23,10 @@ const Camera = define("Camera", Box2, {
     },
 
     set x(value) {
-        const w = this.width * 0.5;
-
-        if ((value - w) < this.minX) {
-            this._x = this.minX + w;
-        } else if ((value + w) > this.maxX) {
-            this._x = this.maxX - w;
+        if (value < this.minX) {
+            this._x = this.minX;
+        } else if (value > this.maxX) {
+            this._x = this.maxX;
         } else {
             this._x = value;
         }
@@ -39,12 +37,10 @@ const Camera = define("Camera", Box2, {
     },
 
     set y(value) {
-        const h = this.height * 0.5;
-
-        if ((value - h) < this.minY) {
-            this._y = this.minY + h;
-        } else if ((value + h) > this.maxY) {
-            this._y = this.maxY - h;
+        if (value < this.minY) {
+            this._y = this.minY;
+        } else if (value > this.maxY) {
+            this._y = this.maxY;
         } else {
             this._y = value;
         }
@@ -76,13 +72,6 @@ const Camera = define("Camera", Box2, {
             x: {get: () => Math.floor(-this.x + this.width * 0.5)},
             y: {get: () => Math.floor(-this.y + this.height * 0.5)}
         });
-
-        this.viewbox = Object.defineProperties(Box2.create(), {
-            width: {get: () => this.width},
-            height: {get: () => this.height},
-            x: {get: () => -this.offset.x},
-            y: {get: () => -this.offset.y}
-        });
     },
 
     clear() {
@@ -90,7 +79,7 @@ const Camera = define("Camera", Box2, {
     },
 
     drawCenter() {
-        const {ctx, width, height, offset} = this;
+        const {ctx, width, height, x, y} = this;
 
         function drawLine(x1, y1, x2, y2) {
             ctx.save();
@@ -109,19 +98,19 @@ const Camera = define("Camera", Box2, {
 
         ctx.font = "11px VT323";
         ctx.fillStyle = "magenta";
-        ctx.fillText(`[${offset.x}, ${offset.y}]`, half(width) + 2.5, half(height) - 2.5);
+        ctx.fillText(`[${x}, ${y}]`, half(width) + 2.5, half(height) - 2.5);
     },
 
     render(actor, deltaT = 0) {
-        if (!boxCollides(this.viewbox, actor)) return;
+        if (!boxCollides(this, actor)) return;
 
-        const x = this.offset.x + actor.x;
-        const y = this.offset.y + actor.y;
+        const x = this.offset.x + actor.left;
+        const y = this.offset.y + actor.top;
 
         console.log(`${actor.name} @ ${actor.x},${actor.y} (painted at ${x},${y})`);
 
         this.ctx.save();
-        this.ctx.translate(x, y);
+        if (actor.screenPos === SCREEN_POS.RELATIVE) this.ctx.translate(x, y);
         actor.render(deltaT, this);
 
         this.ctx.restore();
