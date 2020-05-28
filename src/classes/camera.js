@@ -104,8 +104,8 @@ const Camera = define("Camera", Box2, {
     render(actor, deltaT = 0) {
         if (!boxCollides(this, actor)) return;
 
-        const x = this.offset.x + actor.left;
-        const y = this.offset.y + actor.top;
+        const x = this.offset.x + actor.leftEdge;
+        const y = this.offset.y + actor.topEdge;
 
         console.log(`${actor.name} @ ${actor.x},${actor.y} (painted at ${x},${y})`);
 

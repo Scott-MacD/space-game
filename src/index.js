@@ -44,7 +44,7 @@ const camera = Camera.create({
 
 window.camera = camera;
 
-camera.focus(ship1.center);
+camera.focus(ship1);
 camera.render(world);
 camera.drawCenter();
 

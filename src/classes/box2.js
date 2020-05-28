@@ -6,16 +6,16 @@ const Box2 = define("Box2", Vec2, {
     width: 0,
     height: 0,
 
-    get top() {
+    get topEdge() {
         return this.y - (this.height * 0.5);
     },
-    get left() {
+    get leftEdge() {
         return this.x - (this.width * 0.5);
     },
-    get bottom() {
+    get bottomEdge() {
         return this.y + (this.height * 0.5);
     },
-    get right() {
+    get rightEdge() {
         return this.x + (this.width * 0.5);
     },
 
@@ -27,34 +27,34 @@ const Box2 = define("Box2", Vec2, {
     },
 
     get topLeft() {
-        return Vec2.create({x: this.left, y: this.top})
+        return Vec2.create({x: this.leftEdge, y: this.topEdge})
     },
     get topCenter() {
-        return Vec2.create({x: this.x, y: this.top})
+        return Vec2.create({x: this.x, y: this.topEdge})
     },
     get topRight() {
-        return Vec2.create({x: this.right, y: this.top})
+        return Vec2.create({x: this.rightEdge, y: this.topEdge})
     },
 
     get centerLeft() {
-        return Vec2.create({x: this.left, y: this.y})
+        return Vec2.create({x: this.leftEdge, y: this.y})
     },
-    get center() {
+    get centerPoint() {
         return Vec2.create({x: this.x, y: this.y})
     },
     get centerRight() {
-        return Vec2.create({x: this.right, y: this.y})
+        return Vec2.create({x: this.rightEdge, y: this.y})
     },
 
 
     get bottomLeft() {
-        return Vec2.create({x: this.left, y: this.bottom})
+        return Vec2.create({x: this.leftEdge, y: this.bottomEdge})
     },
     get bottomCenter() {
-        return Vec2.create({x: this.x, y: this.bottom})
+        return Vec2.create({x: this.x, y: this.bottomEdge})
     },
     get bottomRight() {
-        return Vec2.create({x: this.right, y: this.bottom})
+        return Vec2.create({x: this.rightEdge, y: this.bottomEdge})
     },
 });
 
@@ -62,9 +62,9 @@ export default Box2;
 
 export function boxCollides(box1, box2) {
     return !(
-        (box1.bottom < box2.top) ||
-        (box1.top > box2.bottom) ||
-        (box1.right < box2.left) ||
-        (box1.left > box2.right)
+        (box1.bottomEdge < box2.topEdge) ||
+        (box1.topEdge > box2.bottomEdge) ||
+        (box1.rightEdge < box2.leftEdge) ||
+        (box1.leftEdge > box2.rightEdge)
     );
 }
