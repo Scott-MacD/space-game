@@ -107,7 +107,7 @@ const Camera = define("Camera", Box2, {
         const x = this.offset.x + actor.leftEdge;
         const y = this.offset.y + actor.topEdge;
 
-        console.log(`${actor.name} @ ${actor.x},${actor.y} (painted at ${x},${y})`);
+        // console.log(`${actor.name} @ ${actor.x},${actor.y} (painted at ${x},${y})`);
 
         this.ctx.save();
         if (actor.screenPos === SCREEN_POS.RELATIVE) this.ctx.translate(x, y);

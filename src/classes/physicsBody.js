@@ -22,12 +22,22 @@ const PhysicsBody = define("PhysicsBody", Vec2, {
     updatePhysics(deltaT = 0) {
         this.velocity.x += this.acceleration.x * deltaT;
         this.velocity.y += this.acceleration.y * deltaT;
-        
+
         this.x += this.velocity.x * deltaT;
         this.y += this.velocity.y * deltaT;
 
         this.acceleration.x = 0;
         this.acceleration.y = 0;
+    },
+
+    applyForce({ x, y }, scale = 1) {
+        this.acceleration.x += x * scale / this.mass;
+        this.acceleration.y += y * scale / this.mass;
+    },
+
+    applyImpulse({ x, y }, scale = 1) {
+        this.velocity.x += x * scale / this.mass;
+        this.velocity.y += y * scale / this.mass;
     }
 });
 
