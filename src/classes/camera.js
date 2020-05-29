@@ -102,7 +102,7 @@ const Camera = define("Camera", Box2, {
     },
 
     render(actor, deltaT = 0) {
-        if (!boxCollides(this, actor)) return;
+        if ((actor.screenPos === SCREEN_POS.RELATIVE) && !boxCollides(this, actor)) return;
 
         const x = this.offset.x + actor.leftEdge;
         const y = this.offset.y + actor.topEdge;
@@ -126,6 +126,18 @@ const Camera = define("Camera", Box2, {
     focus({x, y}) {
         this.x = x;
         this.y = y;
+    },
+
+    getWorldPosition(screenPos, vec2 = Vec2.create()) {
+        vec2.x = screenPos.x - this.offset.x;
+        vec2.y = screenPos.y - this.offset.y;
+        return vec2;
+    },
+
+    getScreenPosition(worldPos, vec2 = Vec2.create()) {
+        vec2.x = worldPos.x + this.offset.x;
+        vec2.y = worldPos.y + this.offset.y;
+        return vec2;
     }
 
 });

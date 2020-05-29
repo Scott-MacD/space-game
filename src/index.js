@@ -2,6 +2,32 @@ import World from "./classes/world.js";
 import Entity from "./classes/entity.js";
 import Camera from "./classes/camera.js";
 import gameClock from "./lib/gameClock.js";
+import Vec2 from "./classes/vec2.js";
+import Actor, { SCREEN_POS } from "./classes/actor.js";
+
+const mouseScreenPos = Vec2.create();
+const mouseWorldPos = Vec2.create();
+
+const cursorActor = Actor.create({
+    screenPos: SCREEN_POS.ABSOLUTE,
+
+    width: 1,
+    height: 1,
+
+    get x() {
+        return mouseWorldPos.x
+    },
+
+    get y() {
+        return mouseWorldPos.y
+    },
+
+    render(deltaT, {ctx}) {
+        ctx.font = "11px VT323";
+        ctx.fillStyle = "grey";
+        ctx.fillText(`[${Math.round(mouseWorldPos.x)}, ${Math.round(mouseWorldPos.y)}]`, mouseScreenPos.x + 10, mouseScreenPos.y + 10);
+    }
+});
 
 window.world = World.create();
 
@@ -59,6 +85,9 @@ canvas.addEventListener("mousedown", e => mouseDown = true);
 canvas.addEventListener("mouseup", e => mouseDown = false);
 canvas.addEventListener("mouseleave", e => mouseDown = false);
 canvas.addEventListener("mousemove", e => {
+    mouseScreenPos.x = e.x;
+    mouseScreenPos.y = e.y;
+
     if (!mouseDown) return;
     camera.x -= e.movementX;
     camera.y -= e.movementY;
@@ -76,6 +105,8 @@ game.render = function render(deltaT) {
     camera.clear();
     camera.render(world, deltaT);
     camera.drawCenter();
+    camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
+    camera.render(cursorActor, deltaT);
 }
 
 game.play();
