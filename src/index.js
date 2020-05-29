@@ -36,30 +36,31 @@ const ships = [
         name: "ship a",
         width: 100,
         height: 200
-});
+    }),
 
-world.add(ship1, 10, 10);
+    Entity.create({
+        name: "ship b",
+        width: 100,
+        height: 200
+    }),
 
-world.add(Entity.create({
-    name: "ship",
-    width: 100,
-    height: 200
-}), 800, 210);
+    Entity.create({
+        name: "ship c",
+        width: 100,
+        height: 200
+    }),
 
-world.add(Entity.create({
-    name: "ship",
-    width: 100,
-    height: 200
-}), 960, 900);
-
-world.add(Entity.create({
-    name: "ship",
-    width: 100,
-    height: 200
+    Entity.create({
+        name: "ship d",
+        width: 100,
+        height: 200
     })
 ];
 
 world.add(ships[0], 10, 10);
+world.add(ships[1], 800, 210);
+world.add(ships[2], 960, 900);
+world.add(ships[3], 1800, 340);
 
 const canvas = document.getElementById("display");
 
@@ -96,8 +97,21 @@ canvas.addEventListener("mousemove", e => {
 const game = gameClock();
 window.game = game;
 
+const target2 = Vec2.create();
+const target3 = Vec2.create();
+
 game.update = function update(deltaT) {
     ships[0].applyForce(Vec2.fromPoints(ships[0], mouseWorldPos), 5);
+    ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
+
+    target2.x = (ships[0].x + ships[1].x) * 0.5;
+    target2.y = (ships[0].y + ships[1].y) * 0.5;
+    ships[2].applyForce(Vec2.fromPoints(ships[2], target2), 3);
+
+    target3.x = (mouseWorldPos.x + camera.x) * 0.5;
+    target3.y = (mouseWorldPos.y + camera.y) * 0.5;
+    ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
+
     world.update(deltaT);
 }
 
