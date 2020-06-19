@@ -4,6 +4,7 @@ import Camera from "./classes/camera.js";
 import gameClock from "./lib/gameClock.js";
 import Vec2 from "./classes/vec2.js";
 import Actor, { SCREEN_POS } from "./classes/actor.js";
+import createDebugger from "./lib/debugger.js";
 
 const mouseScreenPos = Vec2.create();
 const mouseWorldPos = Vec2.create();
@@ -25,11 +26,11 @@ const cursorActor = Actor.create({
     render(deltaT, {ctx}) {
         ctx.font = "11px VT323";
         ctx.fillStyle = "grey";
-        ctx.fillText(`[${Math.round(mouseWorldPos.x)}, ${Math.round(mouseWorldPos.y)}]`, mouseScreenPos.x + 10, mouseScreenPos.y + 10);
+        ctx.fillText(`[${Math.floor(mouseWorldPos.x)}, ${Math.floor(mouseWorldPos.y)}]`, mouseScreenPos.x + 10, mouseScreenPos.y + 10);
     }
 });
 
-window.world = World.create();
+const world = World.create();
 
 const ships = [
     Entity.create({
@@ -74,8 +75,6 @@ const camera = Camera.create({
     maxY: world.bottom
 });
 
-window.camera = camera;
-
 camera.focus(ships[0]);
 camera.render(world);
 camera.drawCenter();
@@ -94,13 +93,12 @@ canvas.addEventListener("mousemove", e => {
     camera.y -= e.movementY;
 });
 
-const game = gameClock();
-window.game = game;
+const clock = gameClock();
 
 const target2 = Vec2.create();
 const target3 = Vec2.create();
 
-game.update = function update(deltaT) {
+clock.update = function update(deltaT) {
     ships[0].applyForce(Vec2.fromPoints(ships[0], mouseWorldPos), 5);
     ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
 
@@ -115,12 +113,15 @@ game.update = function update(deltaT) {
     world.update(deltaT);
 }
 
-game.render = function render(deltaT) {
-    camera.clear();
+const bugger = createDebugger({world, camera, clock});
+window.bugger = bugger;
+
+clock.render = function render(deltaT) {
     camera.render(world, deltaT);
     camera.drawCenter();
     camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
     camera.render(cursorActor, deltaT);
+    bugger.render();
 }
 
-game.play();
+clock.play();

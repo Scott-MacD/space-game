@@ -118,7 +118,7 @@ const Camera = define("Camera", Box2, {
         if (actor.childActors && actor.childActors.length) {
             for (let i = 0; i < actor.childActors.length; i++) {
                 const child = actor.childActors[i];
-                camera.render(child, deltaT);
+                this.render(child, deltaT);
             }
         }
     },
