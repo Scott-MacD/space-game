@@ -14,9 +14,12 @@ const Camera = define("Camera", Box2, {
     maxY: Infinity,
 
     offset: null,
+    _tracking: null,
 
     _x: 0,
     _y: 0,
+    _lastX: 0,
+    _lastY: 0,
 
     get x() {
         return this._x;
@@ -69,8 +72,8 @@ const Camera = define("Camera", Box2, {
         this.height = height;
 
         this.offset = Object.defineProperties(Vec2.create(), {
-            x: {get: () => Math.floor(-this.x + this.width * 0.5)},
-            y: {get: () => Math.floor(-this.y + this.height * 0.5)}
+            x: {get: () => (-this.x + this.width * 0.5)},
+            y: {get: () => (-this.y + this.height * 0.5)}
         });
     },
 
@@ -98,7 +101,20 @@ const Camera = define("Camera", Box2, {
 
         ctx.font = "11px VT323";
         ctx.fillStyle = "magenta";
-        ctx.fillText(`[${x}, ${y}]`, half(width) + 2.5, half(height) - 2.5);
+        ctx.fillText(`[${Math.floor(x)}, ${Math.floor(y)}]`, half(width) + 2.5, half(height) - 2.5);
+    },
+
+    update() {
+        this.clear();
+        if (this._tracking) {
+            if ((this._lastX !== this.x) || (this._lastY !== this.y)) {
+                this._tracking = false;
+            } else {
+                this.focus(this._tracking);
+                this._lastX = this.x;
+                this._lastY = this.y;
+            }
+        }
     },
 
     render(actor, deltaT = 0) {
@@ -110,7 +126,7 @@ const Camera = define("Camera", Box2, {
         // console.log(`${actor.name} @ ${actor.x},${actor.y} (painted at ${x},${y})`);
 
         this.ctx.save();
-        if (actor.screenPos === SCREEN_POS.RELATIVE) this.ctx.translate(x, y);
+        if (actor.screenPos === SCREEN_POS.RELATIVE) this.ctx.translate(Math.floor(x), Math.floor(y));
         actor.render(deltaT, this);
 
         this.ctx.restore();
@@ -126,6 +142,13 @@ const Camera = define("Camera", Box2, {
     focus({x, y}) {
         this.x = x;
         this.y = y;
+    },
+
+    track(entity) {
+        this.focus(entity);
+        this._lastX = this.x;
+        this._lastY = this.y;
+        this._tracking = entity;
     },
 
     getWorldPosition(screenPos, vec2 = Vec2.create()) {

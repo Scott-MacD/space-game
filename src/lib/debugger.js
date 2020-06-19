@@ -7,6 +7,9 @@ const Debugger = heresy.define("Debugger", {
     clock: null,
     camera: null,
 
+    onclick(e) {
+        this.camera.track(this.world.children[e.currentTarget.index]);
+    },
 
     render() {
 
@@ -15,8 +18,8 @@ const Debugger = heresy.define("Debugger", {
         this.html`
             <h1>Entities</h1>
             <ul>
-                ${entities.map(entity => heresy.html.for(entity)`
-                    <li><b>${entity.name.toUpperCase()}</b> [${Math.floor(entity.x)}, ${Math.floor(entity.y)}]</li>
+                ${entities.map((entity, i) => heresy.html.for(entity)`
+                    <li onclick=${this} ref=${heresy.ref(entities, i)} .index=${i}><b>${entity.name.toUpperCase()}</b> [${Math.floor(entity.x)}, ${Math.floor(entity.y)}]</li>
                 `)}
             </ul>
         `;

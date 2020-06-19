@@ -89,6 +89,7 @@ canvas.addEventListener("mousemove", e => {
     mouseScreenPos.y = e.y;
 
     if (!mouseDown) return;
+    camera.tracking = null;
     camera.x -= e.movementX;
     camera.y -= e.movementY;
 });
@@ -117,6 +118,7 @@ const bugger = createDebugger({world, camera, clock});
 window.bugger = bugger;
 
 clock.render = function render(deltaT) {
+    camera.update();
     camera.render(world, deltaT);
     camera.drawCenter();
     camera.getWorldPosition(mouseScreenPos, mouseWorldPos);

@@ -23,7 +23,7 @@ const Actor = define("Actor", Box2, {
 
         ctx.font = "11px VT323";
         ctx.fillStyle = "cyan";
-        ctx.fillText(`${this.name.toUpperCase()} [${Math.round(this.x)}, ${Math.round(this.y)}]`, 2, 10);
+        ctx.fillText(`${this.name.toUpperCase()} [${Math.floor(this.x)}, ${Math.floor(this.y)}]`, 2, 10);
     }
 });
 
