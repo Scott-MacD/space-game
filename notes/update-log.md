@@ -17,7 +17,7 @@
 
 - Added a game loop with 2 main steps: a world simulation step, and a rendering step.
 
-The rendering step is the somewhat simple step - we run this after the simulation step, 60 times per second, and draw everything that should be drawn on screen, based on what their current state is from the simulation step. If you computer is struggling to keep up, and you drop frames, or are running at a lower frame rate, etc, this doesn't really effect the rendering step. It will draw whatever the state of the world is at that point in time. Some animations might care how much real world time has elapsed, and some might just care that it's the next frame, both are possible.
+ If you computer is struggling to keep up, and you drop frames, or are running at a lower frame rate, etc, this doesn't really effect the rendering step. It will draw whatever the state of the world is at that point in time. Some animations might care how much real world time has elapsed, and some might just care that it's the next frame, both are possible.
 
 The simulation step is slightly more complex. This step is where all the main game logic happens - everything from applying forces and simulating physics, to checking if certain things have happened, etc. This too, is intended to run 60 times per second, ideally once every time before running the rendering step, however there's two problems we need to account for to prevent physics bugs and people intentionally manipulating the game by manipulating their framerate.
 
@@ -29,6 +29,7 @@ The solution to this, is a combination of both. We try to run the main simulatio
 
 Added some "life" to the game!
 - Added some simple game logic so that one ship will accelerate towards the center of the screen, another will accelerate towards your cursor position, a third will accelerate towards the middle of the first two ships, and the fourth will accelerate half way between your cursor and the center of the screen.
+- Currently no friction so things will continue to move almost indefinately (An object in motion likes to stay in motion)
 
 - Added cursor co-ordinates (you'll notice the coordinates lag behind the actual cursor slightly, this is due to the cursor being drawn as fast as the refresh rate of your monitor and graphics card, where-as what I render to the screen (such as those coordinates) is limitted to 60 fps usually, or whatever the browser throttles the FPS to.) I believe it is technically a frame behind by the time I draw it as well. I don't think I can do much about this (if I continue to build this in javascript in the browser)
 

@@ -91,3 +91,49 @@ General Gameplay Idea and Mechanics
 
 - Minimal UI and loading
     - Take inspiration from Heat signature and try to have as few menus as possible and eliminate loading
+
+- Gravity and orbital mechanics?
+
+
+Art Direction
+============
+
+- Main art style Heavily inspired by borderlands and ori with a bit of heat signature
+    - smooth zoom-in/out into everything like heat signature
+    - civ 6 inspired map on full zoom out
+- seed based shader for stars, nebula, etc
+- Take advantage of 2d lighting where we can
+- Use screen shake effectively to gives things a "crisp" arcady feel
+- 8bit style audio?
+
+Business Model
+============
+
+- Youtube + blog the development progress
+
+- Be more active on twitter
+
+- Involve the community as much as possible through the dev process (building up an involved community means I have followers to provide word of mouth, help greenlight, etc)
+
+- Patreon
+    - access to game engine on github
+    - access to dev releases
+    - access to issue tracker
+    - access to discord
+    - heavier influence to game decisions
+
+- Could eventually do second gaming channel
+
+
+Perf Stuff
+==========
+
+- Let's see if we can switch the main gameplay loop to another thread, leave (main?) rendering and io on main thread
+
+- Object pool where it makes sense (especially for projectiles and particals)
+
+- Use offscreen canvases (potentially on another thread) to render indavidual components, then compse them all on the main canvas
+
+- Use quad trees to detect collisions etc
+
+- unload entities into saved chunks
