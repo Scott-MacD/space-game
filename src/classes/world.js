@@ -16,6 +16,12 @@ const World = define("World", Entity, {
 
     screenPos: SCREEN_POS.ABSOLUTE,
 
+    spawn(entityDefinition, x, y) {
+        const entity = entityDefinition.spawn();
+        this.addChild(entity, x, y);
+        return entity;
+    },
+
     render(deltaT, {ctx, width, height, offset}) {
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, width, height);

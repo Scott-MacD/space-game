@@ -1,5 +1,5 @@
 import World from "./classes/world.js";
-import Entity from "./classes/entity.js";
+import { defineEntity } from "./classes/entity.js";
 import Camera from "./classes/camera.js";
 import gameClock from "./lib/gameClock.js";
 import Vec2 from "./classes/vec2.js";
@@ -32,36 +32,18 @@ const cursorActor = Actor.create({
 
 const world = World.create();
 
+const Ship = defineEntity({
+    name: "ship",
+    width: 100,
+    height: 200
+});
+
 const ships = [
-    Entity.create({
-        name: "ship a",
-        width: 100,
-        height: 200
-    }),
-
-    Entity.create({
-        name: "ship b",
-        width: 100,
-        height: 200
-    }),
-
-    Entity.create({
-        name: "ship c",
-        width: 100,
-        height: 200
-    }),
-
-    Entity.create({
-        name: "ship d",
-        width: 100,
-        height: 200
-    })
+    world.spawn(Ship, 10, 10),
+    world.spawn(Ship, 800, 210),
+    world.spawn(Ship, 960, 900),
+    world.spawn(Ship, 1800, 340)
 ];
-
-world.add(ships[0], 10, 10);
-world.add(ships[1], 800, 210);
-world.add(ships[2], 960, 900);
-world.add(ships[3], 1800, 340);
 
 const canvas = document.getElementById("display");
 

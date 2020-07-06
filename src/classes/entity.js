@@ -7,7 +7,7 @@ const Entity = define("Entity", Actor, PhysicsBody, {
     name: "<unnamed entity>",
     children: null,
 
-    add(child, x, y) {
+    addChild(child, x, y) {
         child.x = this.x + x;
         child.y = this.y + y;
 
@@ -32,3 +32,26 @@ const Entity = define("Entity", Actor, PhysicsBody, {
 });
 
 export default Entity;
+
+export function defineEntity({
+    name,
+    width,
+    height
+}) {
+
+    return {
+
+        get name() {return name},
+        get width() {return width},
+        get height() {return height},
+
+        instances: [],
+
+        spawn() {
+            const entity = Entity.create({name, width, height});
+            this.instances.push(entity);
+            return entity;
+        }
+    }
+
+};
