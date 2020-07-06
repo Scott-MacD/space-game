@@ -1,10 +1,10 @@
 import World from "./classes/world.js";
-import { defineEntity } from "./classes/entity.js";
 import Camera from "./classes/camera.js";
 import gameClock from "./lib/gameClock.js";
 import Vec2 from "./classes/vec2.js";
 import Actor, { SCREEN_POS } from "./classes/actor.js";
 import createDebugger from "./lib/debugger.js";
+import { loadEntityDefinition } from "./lib/loaders.js";
 
 const mouseScreenPos = Vec2.create();
 const mouseWorldPos = Vec2.create();
@@ -32,80 +32,80 @@ const cursorActor = Actor.create({
 
 const world = World.create();
 
-const Ship = defineEntity({
-    name: "ship",
-    width: 100,
-    height: 200
-});
+(async () => {
 
-const ships = [
-    world.spawn(Ship, 10, 10),
-    world.spawn(Ship, 800, 210),
-    world.spawn(Ship, 960, 900),
-    world.spawn(Ship, 1800, 340)
-];
+    const Ship = await loadEntityDefinition("ship");
 
-const canvas = document.getElementById("display");
+    const ships = [
+        world.spawn(Ship, 10, 10),
+        world.spawn(Ship, 800, 210),
+        world.spawn(Ship, 960, 900),
+        world.spawn(Ship, 1800, 340)
+    ];
 
-const camera = Camera.create({
-    canvas,
-    width: window.innerWidth,
-    height: window.innerHeight,
-    minX: world.left,
-    minY: world.top,
-    maxX: world.right,
-    maxY: world.bottom
-});
+    const canvas = document.getElementById("display");
 
-camera.focus(ships[0]);
-camera.render(world);
-camera.drawCenter();
+    const camera = Camera.create({
+        canvas,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        minX: world.left,
+        minY: world.top,
+        maxX: world.right,
+        maxY: world.bottom
+    });
 
-let mouseDown = false;
-
-canvas.addEventListener("mousedown", e => mouseDown = true);
-canvas.addEventListener("mouseup", e => mouseDown = false);
-canvas.addEventListener("mouseleave", e => mouseDown = false);
-canvas.addEventListener("mousemove", e => {
-    mouseScreenPos.x = e.x;
-    mouseScreenPos.y = e.y;
-
-    if (!mouseDown) return;
-    camera.tracking = null;
-    camera.x -= e.movementX;
-    camera.y -= e.movementY;
-});
-
-const clock = gameClock();
-
-const target2 = Vec2.create();
-const target3 = Vec2.create();
-
-clock.update = function update(deltaT) {
-    ships[0].applyForce(Vec2.fromPoints(ships[0], mouseWorldPos), 5);
-    ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
-
-    target2.x = (ships[0].x + ships[1].x) * 0.5;
-    target2.y = (ships[0].y + ships[1].y) * 0.5;
-    ships[2].applyForce(Vec2.fromPoints(ships[2], target2), 3);
-
-    target3.x = (mouseWorldPos.x + camera.x) * 0.5;
-    target3.y = (mouseWorldPos.y + camera.y) * 0.5;
-    ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
-
-    world.update(deltaT);
-}
-
-const bugger = createDebugger({world, camera, clock});
-window.bugger = bugger;
-
-clock.render = function render(deltaT) {
-    camera.update();
-    camera.render(world, deltaT);
+    camera.focus(ships[0]);
+    camera.render(world);
     camera.drawCenter();
-    camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
-    camera.render(cursorActor, deltaT);
-    bugger.render();
-}
 
-clock.play();
+    let mouseDown = false;
+
+    canvas.addEventListener("mousedown", e => mouseDown = true);
+    canvas.addEventListener("mouseup", e => mouseDown = false);
+    canvas.addEventListener("mouseleave", e => mouseDown = false);
+    canvas.addEventListener("mousemove", e => {
+        mouseScreenPos.x = e.x;
+        mouseScreenPos.y = e.y;
+
+        if (!mouseDown) return;
+        camera.tracking = null;
+        camera.x -= e.movementX;
+        camera.y -= e.movementY;
+    });
+
+    const clock = gameClock();
+
+    const target2 = Vec2.create();
+    const target3 = Vec2.create();
+
+    clock.update = function update(deltaT) {
+        ships[0].applyForce(Vec2.fromPoints(ships[0], mouseWorldPos), 5);
+        ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
+
+        target2.x = (ships[0].x + ships[1].x) * 0.5;
+        target2.y = (ships[0].y + ships[1].y) * 0.5;
+        ships[2].applyForce(Vec2.fromPoints(ships[2], target2), 3);
+
+        target3.x = (mouseWorldPos.x + camera.x) * 0.5;
+        target3.y = (mouseWorldPos.y + camera.y) * 0.5;
+        ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
+
+        world.update(deltaT);
+    }
+
+    const bugger = createDebugger({world, camera, clock});
+    window.bugger = bugger;
+
+    clock.render = function render(deltaT) {
+        camera.update();
+        camera.render(world, deltaT);
+        camera.drawCenter();
+        camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
+        camera.render(cursorActor, deltaT);
+        bugger.render();
+    }
+
+    clock.play();
+
+})();
