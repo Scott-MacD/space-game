@@ -96,7 +96,7 @@ export default function createDebugger({clock, camera, world}) {
     doc.body.innerHTML = "";
     doc.body.appendChild(bugger);
 
-    fetch("/debug/debugger.css")
+    fetch("./debug/debugger.css")
         .then(response => response.text())
         .then(css => {
             const styleEl = doc.createElement("style");
