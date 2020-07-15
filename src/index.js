@@ -3,7 +3,7 @@ import Camera from "./classes/camera.js";
 import gameClock from "./lib/gameClock.js";
 import Vec2 from "./classes/vec2.js";
 import Actor, { SCREEN_POS } from "./classes/actor.js";
-import createDebugger from "./lib/debugger.js";
+import createDebugger from "./debug/index.js";
 import { loadEntityDefinition } from "./lib/loaders.js";
 
 const mouseScreenPos = Vec2.create();
@@ -79,6 +79,9 @@ const world = World.create();
     const target2 = Vec2.create();
     const target3 = Vec2.create();
 
+    const bugger = createDebugger({world, camera, clock});
+    window.bugger = bugger;
+
     clock.update = function update(deltaT) {
         ships[0].applyForce(Vec2.fromPoints(ships[0], mouseWorldPos), 5);
         ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
@@ -91,11 +94,9 @@ const world = World.create();
         target3.y = (mouseWorldPos.y + camera.y) * 0.5;
         ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
 
+        bugger.render();
         world.update(deltaT);
     }
-
-    const bugger = createDebugger({world, camera, clock});
-    window.bugger = bugger;
 
     clock.render = function render(deltaT) {
         camera.update();
@@ -103,7 +104,6 @@ const world = World.create();
         camera.drawCenter();
         camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
         camera.render(cursorActor, deltaT);
-        bugger.render();
     }
 
     clock.play();

@@ -1,0 +1,135 @@
+:root {
+    font-size: 12px;
+
+    --bgColor: hsl(240deg 5% 13%);
+    --fgColor: #99999f;
+    --activeColor: #eee;
+    --panelBg: hsl(0deg 0% 100% / 8%);
+
+    --inputBorderColor: hsl(0 0% 100% / 0.12);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*:not(input) {
+    user-select: none;
+    cursor: default;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background: var(--bgColor);
+    color: var(--fgColor);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    display: flex;
+}
+
+.debugger {
+    display: grid;
+    grid-gap: 0.25rem;
+    flex: 1;
+    padding: 0.25rem;
+}
+
+.panel {
+    background: var(--panelBg);
+    padding: 0.25rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel > * + * {
+    margin-top: 0.25rem;
+}
+
+.panel-title {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: var(--activeColor);
+    flex: none;
+    line-height: 1.5em;
+    padding: 0.5em 0;
+}
+
+.properties {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    grid-gap: 0.25rem;
+}
+
+.key {
+    grid-column: 1;
+}
+
+.value {
+    grid-column: 2;
+    display: flex;
+}
+
+.properties label,
+.properties input {
+    line-height: 1.5em;
+    padding: 0.25em 0.25em;
+    font-size: inherit;
+}
+
+.properties label {
+    padding-left: 0;
+}
+
+.properties input {
+    background: var(--bgColor);
+    border: 1px solid var(--inputBorderColor);
+    border-radius: 0;
+    color: var(--activeColor);
+    width: 100%;
+}
+
+.properties input:focus {
+    border-radius: 0;
+    outline: none;
+    border-color: var(--activeColor);
+}
+
+.properties input:disabled {
+    color: inherit;
+}
+
+.value > label {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.tree {
+    list-style: none;
+}
+
+.tree li {
+    line-height: 1.25em;
+    padding: 0.125rem 0.75rem;
+    margin: 0 -0.75rem;
+}
+
+.tree li:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--activeColor);
+    box-shadow: 0 1px rgba(255,255,255,0.05), 0 -1px rgba(255,255,255,0.05);
+}
+
+.tree li[data-active="true"] {
+    position: relative;
+    z-index: 1;
+    background: #505052;
+    color: var(--activeColor);
+    box-shadow: 0 1px #505052, 0 -1px #505052;
+
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+}

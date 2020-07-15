@@ -8,17 +8,19 @@ TODO
   - **Follow:** Ability to set a follow target, and threshold. If self distance to target is larger than threshold, causes self to accelerate towards target, including deceleration in calculation so that self will not overshoot target.
 
 - Dev tools
-    - Make it look nicer
     - Ability to inspect entity definition
     - Goto entity
     - Follow entity
     - Delete entity
     - Add entity
-    - Pause game
+    - Pause/Resume game
     - Change game speed
+    - Simulate single tick
     - Stop simulation
     - Toggle crosshairs
     - Toggle cursor co-ords
+    - Webkit devtools-like entity highlighting on hover
+    - Webkit devtools-like inspect entity picker
 
 - Camera Functionality
     - Z-depth/Zoom in/out
@@ -35,3 +37,8 @@ TODO
     - Save to local storage
         - Download as json
         - import from json
+
+- Performance
+    - Object Pools
+    - Reorginize structure of entities to be a Struct Of Arrays
+    - Use Pixi.js for rendering
