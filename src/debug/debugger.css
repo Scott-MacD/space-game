@@ -2,11 +2,14 @@
     font-size: 12px;
 
     --bgColor: hsl(240deg 5% 13%);
+    --btnColor: hsl(0 0% 100% / 0.075);
     --fgColor: #99999f;
     --activeColor: #eee;
+    --accentColor: #268ed9;
     --panelBg: hsl(0deg 0% 100% / 8%);
+    --disabledTextColor: #b1b1b9;
 
-    --inputBorderColor: hsl(0 0% 100% / 0.12);
+    --inputBorderColor: hsl(0 0% 100% / 0.1);
 }
 
 * {
@@ -31,22 +34,48 @@ body {
     display: flex;
 }
 
+fieldset {
+    display: contents;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+}
+
+.vis-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
 .debugger {
-    display: grid;
-    grid-gap: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     flex: 1;
-    padding: 0.25rem;
+    padding: 2px;
 }
 
 .panel {
     background: var(--panelBg);
-    padding: 0.25rem 0.75rem;
-    display: flex;
-    flex-direction: column;
+    padding: 0.5rem 0.75rem;
+    flex: 1;
+    flex-basis: auto;
 }
 
-.panel > * + * {
-    margin-top: 0.25rem;
+.panel:not([open]) {
+    height: min-content;
+    flex: none;
 }
 
 .panel-title {
@@ -54,15 +83,40 @@ body {
     font-size: 0.75rem;
     font-weight: normal;
     color: var(--activeColor);
-    flex: none;
     line-height: 1.5em;
-    padding: 0.5em 0;
+    padding: 0.75rem;
+    margin: -0.5rem -0.75rem 0;
+    cursor: pointer;
 }
 
-.properties {
+.panel-title > svg {
+    opacity: 0;
+    transition: opacity 80ms ease;
+}
+
+.panel-title:hover > svg,
+.panel-title:focus > svg {
+    opacity: 1;
+}
+
+.panel-title:focus {
+    box-shadow: 0 0 0 1px #268ed9 inset;
+    outline: none;
+}
+
+.panel-title:active {
+    background: hsl(240deg 5% 13% / 50%);
+}
+
+.panel:not([open]) .panel-title {
+    margin-bottom: -0.5rem;
+}
+
+.panel-grid {
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: 6rem 1fr;
     grid-gap: 0.25rem;
+    grid-auto-rows: min-content;
 }
 
 .key {
@@ -72,44 +126,70 @@ body {
 .value {
     grid-column: 2;
     display: flex;
+    gap: 0.25rem;
 }
 
-.properties label,
-.properties input {
+.value > * {
+    flex: 1;
+}
+
+.key,
+.field,
+select {
     line-height: 1.5em;
-    padding: 0.25em 0.25em;
-    font-size: inherit;
+    padding: 0.25em 0.5em;
+    font-size: 0.9rem;
 }
 
-.properties label {
+.key {
     padding-left: 0;
 }
 
-.properties input {
+.field {
     background: var(--bgColor);
     border: 1px solid var(--inputBorderColor);
-    border-radius: 0;
+    border-radius: 2px;
     color: var(--activeColor);
+    width: 100%;
+    display: flex;
+}
+
+.field > input {
+    background: inherit;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    border: none;
+}
+
+.field > input {
+    flex: 1;
     width: 100%;
 }
 
-.properties input:focus {
-    border-radius: 0;
-    outline: none;
-    border-color: var(--activeColor);
-}
-
-.properties input:disabled {
-    color: inherit;
-}
-
-.value > label {
-    padding-left: 0.5em;
+.field > label {
+    flex: 0;
+    color: var(--disabledTextColor);
     padding-right: 0.5em;
+}
+
+input:focus {
+    outline: none;
+}
+
+.field:focus-within {
+    border-color: var(--accentColor);
+}
+
+input:disabled {
+    background: transparent;
+    border-color: transparent;
+    border-bottom: 1px dotted var(--inputBorderColor);
 }
 
 .tree {
     list-style: none;
+    grid-column: span 2;
 }
 
 .tree li {
@@ -132,4 +212,82 @@ body {
     box-shadow: 0 1px #505052, 0 -1px #505052;
 
     transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.btn {
+    background: var(--btnColor);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: none;
+    border: 1px solid hsl(240 5% 13% / 0.6);
+    box-shadow: 0 1px 1px -1px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255,255,255,0.1) inset;
+    font-family: inherit;
+    font-size: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.7rem;
+    border-radius: 2px;
+    position: relative;
+}
+
+.btn:hover:not(:active) {
+    background: #505052;
+}
+
+.btn:hover,
+.btn:focus {
+    color: #cfcfd4;
+}
+
+.toggle-group-inner {
+    gap: 0;
+}
+
+.toggle-group .btn:not(:first-of-type) {
+    margin-left: -1px;
+}
+
+.toggle-group  input:checked + .btn {
+    background: var(--bgColor);
+    border-top: 1px solid hsl(240 5% 11% / 0.6);
+    box-shadow: 0 1px 1px -1px rgba(255, 255, 255, 0.1), 0 0 1px rgba(0,0,0,0.4) inset;
+    color: #cfcfd4;
+}
+
+.toggle-group  input:checked:not(:focus) + .btn {
+    border-radius: 0;
+}
+
+.toggle-group  input:checked:not(:focus) + .btn:first-of-type {
+    border-radius: 1px 0 0 1px;
+}
+
+.toggle-group  input:checked:not(:focus) + .btn:last-child {
+    border-radius: 0 1px 1px 0;
+}
+
+.toggle-group input:focus + .btn {
+    border-color: var(--accentColor);
+    position: relative;
+    z-index: 1;
+}
+
+.dropdown-wrapper {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    grid-template-areas: "label icon";
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    grid-area: label / icon;
+}
+
+.dropdown-wrapper > svg {
+    grid-area: icon;
+    pointer-events: none;
+    z-index: 1;
 }
