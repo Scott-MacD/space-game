@@ -5,6 +5,7 @@ import Vec2 from "./classes/vec2.js";
 import Actor, { SCREEN_POS } from "./classes/actor.js";
 import createDebugger from "./debug/index.js";
 import { loadEntityDefinition } from "./lib/loaders.js";
+import playerControl from "./behaviors/playerControl.js";
 
 const mouseScreenPos = Vec2.create();
 const mouseWorldPos = Vec2.create();
@@ -42,6 +43,9 @@ const world = World.create();
         world.spawn(Ship, 960, 900),
         world.spawn(Ship, 1800, 340)
     ];
+
+    const player = ships[0];
+    player.addBehavior(playerControl);
 
     const canvas = document.getElementById("display");
 

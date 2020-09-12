@@ -6,6 +6,7 @@ const Entity = define("Entity", Actor, PhysicsBody, {
 
     name: "<unnamed entity>",
     children: null,
+    behaviors: null,
 
     addChild(child, x, y) {
         child.x = this.x + x;
@@ -18,7 +19,14 @@ const Entity = define("Entity", Actor, PhysicsBody, {
         if (child.is(PhysicsBody)) this.addPhysicsBody(child);
     },
 
+    addBehavior(behavior) {
+        if (!this.behaviors) this.behaviors = new Set();
+        this.behaviors.add(behavior);
+    },
+
     update(deltaT = 0) {
+        this.behaviors?.forEach(behavior => behavior.call(this, deltaT));
+
         this.updatePhysics(deltaT);
 
          if (this.children) {
