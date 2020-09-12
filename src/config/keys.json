@@ -1,0 +1,8 @@
+{
+    "ship": {
+        "accelerate": "w",
+        "decelerate": "s",
+        "rotateLeft": "a",
+        "rotateRight": "d"
+    }
+}

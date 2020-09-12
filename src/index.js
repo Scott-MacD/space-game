@@ -87,7 +87,6 @@ const world = World.create();
     window.bugger = bugger;
 
     clock.update = function update(deltaT) {
-        ships[0].applyForce(Vec2.fromPoints(ships[0], mouseWorldPos), 5);
         ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
 
         target2.x = (ships[0].x + ships[1].x) * 0.5;
