@@ -11,11 +11,15 @@ General Gameplay Idea and Mechanics
         - different factions have different stories?
     - unlockable starting equipment
 
+- Persitant world when you die
+    - The game does not start over
+    - Control switches to another significant ship in current faction
+
 - Actual story, components randomly shuffled, mission points generate based on seed and explored world
-    - Take inspiration from FTL, Halcyon 6, Heat Signature, Shadow of Mordor
+    - Take inspiration from FTL, Halcyon 6, Heat Signature, Shadow of Mordor, Crusader Kings 3, Mount and Blade
     - Events with multiple choice responses with pseudo random (based on seed) outcomes
     - Each faction has it's own personality and goals
-        - Infliences their decisions
+        - Influences their decisions
         - Have their own inner conflicts with each other
         - May expand territory, even vs each other, under certain conditions
 
@@ -23,7 +27,11 @@ General Gameplay Idea and Mechanics
     - fleets can have up to 3 "ships" (toying around with idea of some ships being a group of smaller ships that act as one unit)
     - take insp from Halcyon 6
 
-
+- Shadow of morder, nemesis inspired system
+    - Enemies that have seen you and survived will remember you/learn from you
+    - Enemies that have killed you will rank up and become stronger, may loot your equipment
+    - Enemies that come across destroyed rubble from any ship may use that equipment on themselves
+    - Each AI has it's own personality and ship size/loadout preferences
 
 - Customizable upgradable ships + crew
     - Ships can level up
@@ -99,12 +107,14 @@ Art Direction
 ============
 
 - Main art style Heavily inspired by borderlands and ori with a bit of heat signature
-    - smooth zoom-in/out into everything like heat signature
-    - civ 6 inspired map on full zoom out
+    - smooth zoom-in/out into everything like heat signature and crusader kings
+    - civ 6/crusader kings inspired map on full zoom out
 - seed based shader for stars, nebula, etc
 - Take advantage of 2d lighting where we can
 - Use screen shake effectively to gives things a "crisp" arcady feel
 - 8bit style audio?
+- Crusader kings 3 UI insp
+- As soon as game is booted up, it should go right to main menu (inspired by crusader kings pause menu), that loads last played save as background to main menu so the player can jump in instantly (simlar to heat signature)
 
 Business Model
 ============
