@@ -36,8 +36,12 @@ export default Entity;
 export function defineEntity({
     name,
     width,
-    height
+    height,
+    sprite,
 }) {
+
+    const spriteImg = new Image();
+    spriteImg.src = `./assets/sprites/${sprite}`;
 
     return {
 
@@ -48,7 +52,7 @@ export function defineEntity({
         instances: [],
 
         spawn() {
-            const entity = Entity.create({name, width, height});
+            const entity = Entity.create({name, width, height, sprite: spriteImg});
             this.instances.push(entity);
             return entity;
         }

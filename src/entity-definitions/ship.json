@@ -1,6 +1,8 @@
 {
     "name": "ship",
 
-    "width": 100,
-    "height": 200
+    "width": 50,
+    "height": 77,
+
+    "sprite": "ship.png"
 }
