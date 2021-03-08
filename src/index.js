@@ -6,6 +6,7 @@ import Actor, { SCREEN_POS } from "./classes/actor.js";
 import createDebugger from "./debug/index.js";
 import { loadEntityDefinition } from "./lib/loaders.js";
 import playerControl from "./behaviors/playerControl.js";
+import TileGrid from "./classes/tileGrid.js";
 
 const mouseScreenPos = Vec2.create();
 const mouseWorldPos = Vec2.create();
@@ -63,6 +64,11 @@ const world = World.create();
     camera.render(world);
     camera.drawCenter();
 
+    const tileGrid = TileGrid.create();
+    tileGrid.width = camera.width;
+    tileGrid.height = camera.height;
+    world.addChild(tileGrid, 0, 0);
+
     let mouseDown = false;
 
     canvas.addEventListener("mousedown", e => mouseDown = true);
@@ -96,6 +102,8 @@ const world = World.create();
         target3.x = (mouseWorldPos.x + camera.x) * 0.5;
         target3.y = (mouseWorldPos.y + camera.y) * 0.5;
         ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
+
+        tileGrid.highlightTileAtWorldPos(mouseWorldPos);
 
         bugger.render();
         world.update(deltaT);
