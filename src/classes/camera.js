@@ -134,7 +134,9 @@ const Camera = define("Camera", Box2, {
         if (actor.childActors && actor.childActors.length) {
             for (let i = 0; i < actor.childActors.length; i++) {
                 const child = actor.childActors[i];
+                this.ctx.save();
                 this.render(child, deltaT);
+                this.ctx.restore();
             }
         }
     },
