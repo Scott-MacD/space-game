@@ -23,8 +23,9 @@ const Debugger = heresy.define("Debugger", {
         const entities = (this.world && this.world.children) || [];
 
         const renderEntity = (entity, i) => {
+            const rendered = this.camera.actorMeta.get(entity)?.rendered;
             return heresy.html.for(entity)`
-                <li onclick=${this} ref=${heresy.ref(entities, i)} .index=${i} data-active=${this.currentEntity === entity}>${entity.name}</li>
+                <li onclick=${this} ref=${heresy.ref(entities, i)} .index=${i} data-active=${this.currentEntity === entity} data-rendered=${rendered}>${entity.name}</li>
             `;
         }
         

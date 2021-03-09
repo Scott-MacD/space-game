@@ -9,8 +9,10 @@ const Entity = define("Entity", Actor, PhysicsBody, {
     behaviors: null,
 
     addChild(child, x, y) {
-        child.x = this.x + x;
-        child.y = this.y + y;
+        if (x !== undefined && y !== undefined) {
+            child.x = x;
+            child.y = y;
+        }
 
         if (!this.children) this.children = [];
         if (child.is(Entity)) this.children.push(child);

@@ -12,8 +12,6 @@ const mouseScreenPos = Vec2.create();
 const mouseWorldPos = Vec2.create();
 
 const cursorActor = Actor.create({
-    screenPos: SCREEN_POS.ABSOLUTE,
-
     width: 1,
     height: 1,
 
@@ -111,10 +109,10 @@ const world = World.create();
 
     clock.render = function render(deltaT) {
         camera.update();
-        camera.render(world, deltaT);
+        camera.render(world, deltaT, {screenPos: SCREEN_POS.ABSOLUTE});
         camera.drawCenter();
         camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
-        camera.render(cursorActor, deltaT);
+        camera.render(cursorActor, deltaT, {screenPos: SCREEN_POS.ABSOLUTE});
     }
 
     clock.play();

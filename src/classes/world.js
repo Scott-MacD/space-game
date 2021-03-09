@@ -19,8 +19,6 @@ const World = define("World", Entity, {
     minExploredY: 0,
     maxExploredY: 0,
 
-    screenPos: SCREEN_POS.ABSOLUTE,
-
     spawn(entityDefinition, x, y) {
         const entity = entityDefinition.spawn();
         this.addChild(entity, x, y);

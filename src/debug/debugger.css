@@ -214,6 +214,14 @@ input:disabled {
     transition: background-color 120ms ease, box-shadow 120ms ease;
 }
 
+.tree li[data-rendered="true"]::after {
+    content: " (rendered)";
+    font-size: 0.675em;
+    color: green;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
 .btn {
     background: var(--btnColor);
     overflow: hidden;

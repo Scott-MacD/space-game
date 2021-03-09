@@ -13,6 +13,8 @@ const Camera = define("Camera", Box2, {
     minY: -Infinity,
     maxY: Infinity,
 
+    actorMeta: null,
+
     offset: null,
     _tracking: null,
 
@@ -75,6 +77,8 @@ const Camera = define("Camera", Box2, {
             x: {get: () => (-this.x + this.width * 0.5)},
             y: {get: () => (-this.y + this.height * 0.5)}
         });
+
+        this.actorMeta = new WeakMap();
     },
 
     clear() {
@@ -117,28 +121,61 @@ const Camera = define("Camera", Box2, {
         }
     },
 
-    render(actor, deltaT = 0) {
-        if ((actor.screenPos === SCREEN_POS.RELATIVE) && !boxCollides(this, actor)) return;
-
-        const x = this.offset.x + actor.leftEdge;
-        const y = this.offset.y + actor.topEdge;
-
-        // console.log(`${actor.name} @ ${actor.x},${actor.y} (painted at ${x},${y})`);
+    render(actor, deltaT = 0, {
+        screenPos = SCREEN_POS.RELATIVE,
+        parentMeta = null,
+    } = {}) {
+        // if ((screenPos === SCREEN_POS.RELATIVE) && !boxCollides(this, actor)) return;
 
         this.ctx.save();
-        if (actor.screenPos === SCREEN_POS.RELATIVE) this.ctx.translate(Math.floor(x), Math.floor(y));
-        actor.render(deltaT, this);
 
-        this.ctx.restore();
+        let meta = this.actorMeta.get(actor);
 
-        if (actor.childActors && actor.childActors.length) {
-            for (let i = 0; i < actor.childActors.length; i++) {
-                const child = actor.childActors[i];
-                this.ctx.save();
-                this.render(child, deltaT);
-                this.ctx.restore();
+        if (!meta) {
+            meta = {
+                bounds: Box2.create({width: actor.width, height: actor.height})
+            };
+            this.actorMeta.set(actor, meta);
+        }
+
+        meta.isChild = parentMeta !== null;
+        meta.screenPos = screenPos;
+        meta.renderX = 0;
+        meta.renderY = 0;
+        meta.rendered = false;
+        meta.bounds.x = actor.x;
+        meta.bounds.y = actor.y;
+
+        if (!meta.isChild && screenPos === SCREEN_POS.RELATIVE) {
+            meta.renderX += this.offset.x;
+            meta.renderY += this.offset.y;
+        }
+
+        if (screenPos === SCREEN_POS.RELATIVE) {
+            meta.renderX += actor.leftEdge;
+            meta.renderY += actor.topEdge;
+        }
+        
+        if (parentMeta) {
+            meta.bounds.x += parentMeta.bounds.x;
+            meta.bounds.y += parentMeta.bounds.y;
+        }
+
+        if (boxCollides(this, meta.bounds)) {
+            meta.rendered = true;
+
+            if (meta.renderX || meta.renderY) this.ctx.translate(meta.renderX, meta.renderY);
+            actor.render(deltaT, this);
+
+            if (actor.childActors && actor.childActors.length) {
+                for (let i = 0; i < actor.childActors.length; i++) {
+                    const child = actor.childActors[i];
+                    this.render(child, deltaT, {parentMeta: meta});
+                }
             }
         }
+
+        this.ctx.restore();
     },
 
     focus({x, y}) {

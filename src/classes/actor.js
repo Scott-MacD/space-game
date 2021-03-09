@@ -9,7 +9,6 @@ export const SCREEN_POS = {
 const Actor = define("Actor", Box2, {
 
     childActors: null,
-    screenPos: SCREEN_POS.RELATIVE,
     sprite: null,
     spriteLoaded: false,
 
