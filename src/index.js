@@ -101,6 +101,7 @@ const world = World.create();
         target3.y = (mouseWorldPos.y + camera.y) * 0.5;
         ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
 
+        tileGrid.panTo(camera);
         tileGrid.highlightTileAtWorldPos(mouseWorldPos);
 
         bugger.render();

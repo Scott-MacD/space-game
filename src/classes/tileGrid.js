@@ -15,19 +15,21 @@ const TileGrid = define("TileGrid", Entity, {
     highlightTileAtWorldPos({x, y}) {
         const cellSize = this.cellSize;
         this.highlightedTile = [
-            Math.floor(x / cellSize),
-            Math.floor(y / cellSize)
+            Math.floor((x - this.x) / cellSize),
+            Math.floor((y - this.y) / cellSize)
         ];
+    },
+
+    panTo({x, y}) {
+        const cellSize = this.cellSize;
+        this.x = Math.floor(x / cellSize) * cellSize;
+        this.y = Math.floor(y / cellSize) * cellSize;
     },
 
     render(deltaT, {ctx}) {
         const cellSize = this.cellSize;
         if (this.highlightedTile !== null) {
             const [x, y] = this.highlightedTile;
-
-            // const x = 0;
-            // const y = 0;
-
             ctx.translate(this.width/2, this.height/2);
             ctx.strokeStyle = 'orange';
             ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
