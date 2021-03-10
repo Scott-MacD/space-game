@@ -161,7 +161,7 @@ const Camera = define("Camera", Box2, {
             meta.bounds.y += parentMeta.bounds.y;
         }
 
-        if (boxCollides(this, meta.bounds)) {
+        if (screenPos === SCREEN_POS.ABSOLUTE || boxCollides(this, meta.bounds)) {
             meta.rendered = true;
 
             if (meta.renderX || meta.renderY) this.ctx.translate(meta.renderX, meta.renderY);
