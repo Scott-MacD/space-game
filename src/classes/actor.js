@@ -37,7 +37,7 @@ const Actor = define("Actor", Box2, {
             return;
         }
 
-        camera.ctx.drawImage(this.sprite, 0, 0, this.width, this.height);
+        camera.ctx.drawImage(this.sprite, 0, 0, this.width * camera.zoom, this.height * camera.zoom);
     }
 });
 

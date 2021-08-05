@@ -13,6 +13,10 @@ const Camera = define("Camera", Box2, {
     minY: -Infinity,
     maxY: Infinity,
 
+    _zoom: 1,
+    minZoom: 1,
+    maxZoom: Infinity,
+
     actorMeta: null,
 
     offset: null,
@@ -48,6 +52,20 @@ const Camera = define("Camera", Box2, {
             this._y = this.maxY;
         } else {
             this._y = value;
+        }
+    },
+
+    get zoom() {
+        return this._zoom;
+    },
+
+    set zoom(zoom) {
+        if (zoom > this.maxZoom) {
+            this._zoom = this.maxZoom;
+        } else if (zoom < this.minZoom) {
+            this._zoom = this.minZoom;
+        } else {
+            this._zoom = zoom;
         }
     },
 
@@ -147,8 +165,8 @@ const Camera = define("Camera", Box2, {
         meta.bounds.y = actor.y;
 
         if (!meta.isChild && screenPos === SCREEN_POS.RELATIVE) {
-            meta.renderX += this.offset.x;
-            meta.renderY += this.offset.y;
+            meta.renderX += this.offset.x * this.zoom;
+            meta.renderY += this.offset.y * this.zoom;
         }
 
         if (screenPos === SCREEN_POS.RELATIVE) {
@@ -191,14 +209,14 @@ const Camera = define("Camera", Box2, {
     },
 
     getWorldPosition(screenPos, vec2 = Vec2.create()) {
-        vec2.x = screenPos.x - this.offset.x;
-        vec2.y = screenPos.y - this.offset.y;
+        vec2.x = screenPos.x - this.offset.x * this.zoom;
+        vec2.y = screenPos.y - this.offset.y * this.zoom;
         return vec2;
     },
 
     getScreenPosition(worldPos, vec2 = Vec2.create()) {
-        vec2.x = worldPos.x + this.offset.x;
-        vec2.y = worldPos.y + this.offset.y;
+        vec2.x = worldPos.x + this.offset.x * this.zoom;
+        vec2.y = worldPos.y + this.offset.y * this.zoom;
         return vec2;
     }
 
