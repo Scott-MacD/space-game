@@ -62,9 +62,11 @@ const world = World.create();
     camera.render(world);
     camera.drawCenter();
 
-    const tileGrid = TileGrid.create();
-    tileGrid.width = camera.width;
-    tileGrid.height = camera.height;
+    const tileGrid = TileGrid.create({
+        width: camera.width,
+        height: camera.height,
+        cellSize: 48
+    });
     world.addChild(tileGrid, 0, 0);
 
     let mouseDown = false;
