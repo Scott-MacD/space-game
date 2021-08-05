@@ -151,7 +151,7 @@ const Camera = define("Camera", Box2, {
 
         if (!meta) {
             meta = {
-                bounds: Box2.create({width: actor.width, height: actor.height})
+                bounds: Box2.create({width: actor.width * this.zoom, height: actor.height * this.zoom})
             };
             this.actorMeta.set(actor, meta);
         }
@@ -161,17 +161,17 @@ const Camera = define("Camera", Box2, {
         meta.renderX = 0;
         meta.renderY = 0;
         meta.rendered = false;
-        meta.bounds.x = actor.x;
-        meta.bounds.y = actor.y;
+        meta.bounds.x = actor.x * this.zoom;
+        meta.bounds.y = actor.y * this.zoom;
 
         if (!meta.isChild && screenPos === SCREEN_POS.RELATIVE) {
-            meta.renderX += this.offset.x * this.zoom;
-            meta.renderY += this.offset.y * this.zoom;
+            meta.renderX += this.offset.x;
+            meta.renderY += this.offset.y;
         }
 
         if (screenPos === SCREEN_POS.RELATIVE) {
-            meta.renderX += actor.leftEdge;
-            meta.renderY += actor.topEdge;
+            meta.renderX += actor.leftEdge * this.zoom;
+            meta.renderY += actor.topEdge * this.zoom;
         }
         
         if (parentMeta) {
