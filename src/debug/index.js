@@ -1,5 +1,9 @@
 import heresy from "../vendor/heresy.min.js";
 
+function getShortId(fullId) {
+    return fullId.substring(30);
+}
+
 const Debugger = heresy.define("Debugger", {
     extends: 'div',
 
@@ -21,11 +25,12 @@ const Debugger = heresy.define("Debugger", {
     render() {
 
         const entities = (this.world && this.world.children) || [];
+        const renderMeta = this.currentEntity ? this.camera.getMeta(this.currentEntity) : null;
 
         const renderEntity = (entity, i) => {
             const rendered = this.camera.actorMeta.get(entity)?.rendered;
             return heresy.html.for(entity)`
-                <li onclick=${this} ref=${heresy.ref(entities, i)} .index=${i} data-active=${this.currentEntity === entity} data-rendered=${rendered}>${entity.name}</li>
+                <li onclick=${this} ref=${heresy.ref(entities, i)} .index=${i} data-active=${this.currentEntity === entity} data-rendered=${rendered}>${entity.name} [${getShortId(entity.id)}]</li>
             `;
         }
         
@@ -51,11 +56,23 @@ const Debugger = heresy.define("Debugger", {
                     <label class="key" for="entName">Name</label>
                     <input class="field value" name="entName" id="entName" type="text" disabled .value=${this.currentEntity ? this.currentEntity.name : ""}>
 
-                    <label class="key" for="entWidth">Width</label>
-                    <input class="field value" name="entWidth" id="entWidth" type="number" disabled .value=${this.currentEntity ? this.currentEntity.width : ""}>
+                    <label class="key" for="entId">ID</label>
+                    <input class="field value" name="entId" id="entId" type="text" disabled .value=${this.currentEntity ? this.currentEntity.id : ""}>
 
-                    <label class="key" for="entHeight">Height</label>
-                    <input class="field value" name="entHeight" id="entHeight" type="number" disabled .value=${this.currentEntity ? this.currentEntity.height : ""}>
+                    <fieldset>
+                        <legend class="key">Size</legend>
+                        <div class="value">
+                            <div class="field -disabled">
+                                <label for="entWidth">W</label>
+                                <input name="entWidth" id="entWidth" type="number" disabled .value=${this.currentEntity ? Math.floor(this.currentEntity.width) : ""}>
+                            </div>
+
+                            <div class="field -disabled">
+                                <label for="entHeight">H</label>
+                                <input name="entHeight" id="entHeight" type="number" disabled .value=${this.currentEntity ? Math.floor(this.currentEntity.height) : ""}>
+                            </div>
+                        </div>
+                    </fieldset>
 
                     <label class="key" for="entMass">Mass</label>
                     <input class="field value" name="entMass" id="entMass" type="number" disabled .value=${this.currentEntity ? this.currentEntity.mass : ""}>
@@ -104,107 +121,151 @@ const Debugger = heresy.define("Debugger", {
                             </div>
                         </div>
                     </fieldset>
+
+                    <label class="key" for="entRendered">Rendered</label>
+                    <input class="field value" name="entRendered" id="entRendered" type="text" disabled .value=${renderMeta ? renderMeta.rendered : ""}>
+
+                    <fieldset>
+                        <legend class="key">Render Pos</legend>
+                        <div class="value">
+                            <div class="field -disabled">
+                                <label for="entRenderX">X</label>
+                                <input name="entRenderX" id="entRenderX" type="number" disabled .value=${renderMeta ? Math.floor(renderMeta.renderX) : ""}>
+                            </div>
+
+                            <div class="field -disabled">
+                                <label for="entRenderY">Y</label>
+                                <input name="entRenderY" id="entRenderY" type="number" disabled .value=${renderMeta ? Math.floor(renderMeta.renderY) : ""}>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="key">Render Size</legend>
+                        <div class="value">
+                            <div class="field -disabled">
+                                <label for="entRenderWidth">W</label>
+                                <input name="entRenderWidth" id="entRenderWidth" type="number" disabled .value=${renderMeta ? Math.floor(renderMeta.bounds.width) : ""}>
+                            </div>
+
+                            <div class="field -disabled">
+                                <label for="entRenderHeight">H</label>
+                                <input name="entRenderHeight" id="entRenderHeight" type="number" disabled .value=${renderMeta ? Math.floor(renderMeta.bounds.height) : ""}>
+                            </div>
+                        </div>
+                    </fieldset>
+
                 </div>
             </details>
 
 
             <details class="panel" open>
                 <summary class="panel-title dropdown-wrapper">
-                    Toggle Group
+                    Camera
+                    <svg width="12" height="12" viewBox='0 0 12 12'><path d='M3 7l2.25.007h1.5L9 7l-3 3-3-3zm0-2l2.25-.007h1.5L9 5 6 2 3 5z' fill='currentColor'></path></svg>
+                </summary>
+
+                <div class="panel-grid">
+                    <fieldset>
+                        <legend class="key">Position</legend>
+                        <div class="value">
+                            <div class="field">
+                                <label for="camPosX">X</label>
+                                <input name="camPosX" id="camPosX" type="number" .value=${Math.floor(this.camera.x)}>
+                            </div>
+
+                            <div class="field">
+                                <label for="camPosY">Y</label>
+                                <input name="camPosY" id="camPosY" type="number" .value=${Math.floor(this.camera.y)}>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <label class="key" for="camZoom">Zoom</label>
+                    <input type="range" name="camZoom" id="camZoom" step="0.1" min=${this.camera.minZoom} max=${this.camera.maxZoom} .value=${this.camera.zoom}>
+
+                    <label class="key" for="select">Tracking</label>
+                    <div class="dropdown-wrapper">
+                        <select id="camTracking" class="btn">
+                            <option value=${null} .selected=${!this.currentEntity}>------</option>
+                            ${entities.map(entity => heresy.html`
+                                <option value=${entity.id} .selected=${this.camera.tracking === entity}>${entity.name} [${getShortId(entity.id)}]</option>
+                            `)}
+                        </select>
+                        <svg width="12" height="12" viewBox='0 0 12 12'><path d='M3 7l2.25.007h1.5L9 7l-3 3-3-3zm0-2l2.25-.007h1.5L9 5 6 2 3 5z' fill='currentColor'></path></svg>
+                    </div>
+
+                    <fieldset class="toggle-group">
+
+                        <legend class="key">Overlays</legend>
+
+                        <div class="toggle-group-inner value">
+
+                            <input class="vis-hidden" type="checkbox" id="camDrawCenter" name="camDrawCenter">
+                            <label class="btn" for="camDrawCenter">
+                                <span class="button-label vis-hidden">Draw center lines</span>
+                                Center Lines
+                            </label>
+
+                            <input class="vis-hidden" type="checkbox" id="camDrawERB" name="camDrawERB">
+                            <label class="btn" for="camDrawERB">
+                                <span class="button-label vis-hidden">Draw entity render box</span>
+                                ERB
+                                <!-- <svg data-icon="AlignItemsCenterRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" stroke="currentColor" d="M3.5 3.5h3v8h-3zm5 1h3v6h-3z"></path><path fill="currentColor" d="M0 7h16v1H0z"></path></svg> -->
+                            </label>
+
+                        </div>
+                    </fieldset>
+                </div>
+            </details>
+
+
+            <details class="panel" open>
+                <summary class="panel-title dropdown-wrapper">
+                    Game Clock
                     <svg width="12" height="12" viewBox='0 0 12 12'><path d='M3 7l2.25.007h1.5L9 7l-3 3-3-3zm0-2l2.25-.007h1.5L9 5 6 2 3 5z' fill='currentColor'></path></svg>
                 </summary>
 
                 <div class="panel-grid">
                     <fieldset class="toggle-group">
-
-                        <legend class="key">Align</legend>
-
+                        <div class="toggle-group-inner value">
+                            <button class="btn">Pause</button>
+                            <button class="btn" disabled>Next Frame</button>
+                        </div>
                         <div class="toggle-group-inner value">
 
-                            <input class="vis-hidden" type="radio" id="align-start" name="align" value="start" checked>
-                            <label class="btn" for="align-start">
-                                <span class="button-label vis-hidden">Align: Start</span>
-                                <svg class="button-icon" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 0h16v1H0z"></path><path fill="currentColor" stroke="currentColor" d="M3.5 2.5h3v7h-3zm5 0h3v5h-3z"></path></svg>
+                            <input class="vis-hidden" type="radio" id="playback1" name="playbackSpeed" value="0.1">
+                            <label class="btn" for="playback1">
+                                <span class="button-label vis-hidden">10% Speed</span>
+                                0.1
                             </label>
 
-                            <input class="vis-hidden" type="radio" id="align-center" name="align" value="center">
-                            <label class="btn" for="align-center">
-                                <span class="button-label vis-hidden">Align: Center</span>
-                                <svg data-icon="AlignItemsCenterRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" stroke="currentColor" d="M3.5 3.5h3v8h-3zm5 1h3v6h-3z"></path><path fill="currentColor" d="M0 7h16v1H0z"></path></svg>
+                            <input class="vis-hidden" type="radio" id="playback2" name="playbackSpeed" value="0.5">
+                            <label class="btn" for="playback2">
+                                <span class="button-label vis-hidden">50% Speed</span>
+                                0.5
                             </label>
 
-                            <input class="vis-hidden" type="radio" id="align-end" name="align" value="end">
-                            <label class="btn" for="align-end">
-                                <span class="button-label vis-hidden">Align: End</span>
-                                <svg data-icon="AlignItemsEndRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 15h16v1H0z"></path><path fill="currentColor" stroke="currentColor" d="M3.5 6.5h3v7h-3zm5 2h3v5h-3z"></path></svg>
+                            <input class="vis-hidden" type="radio" id="playback3" name="playbackSpeed" value="1" checked>
+                            <label class="btn" for="playback3">
+                                <span class="button-label vis-hidden">100% Speed</span>
+                                1
                             </label>
 
-                            <input class="vis-hidden" type="radio" id="align-stretch" name="align" value="stretch">
-                            <label class="btn" for="align-stretch">
-                                <span class="button-label vis-hidden">Align: Stretch</span>
-                                <svg data-icon="AlignItemsStretchRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 0h16v1H0zm0 15h16v1H0z"></path><path fill="currentColor" stroke="currentColor" d="M3.5 2.5h3v11h-3zm5 0h3v11h-3z"></path></svg>
+                            <input class="vis-hidden" type="radio" id="playback4" name="playbackSpeed" value="2">
+                            <label class="btn" for="playback4">
+                                <span class="button-label vis-hidden">200% Speed</span>
+                                2
                             </label>
 
-                            <input class="vis-hidden" type="radio" id="align-baseline" name="align" value="baseline">
-                            <label class="btn" for="align-baseline">
-                                <span class="button-label vis-hidden">Align: Baseline</span>
-                                <svg data-icon="AlignItemsBaselineRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 7h16v1H0z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3H8v7h4V3zm-1 1H9v3h2V4zM7 3H3v9h4V3zM6 4H4v3h2V4z" fill="currentColor"></path></svg>
+                            <input class="vis-hidden" type="radio" id="playback5" name="playbackSpeed" value="10">
+                            <label class="btn" for="playback5">
+                                <span class="button-label vis-hidden">1000% Speed</span>
+                                10
                             </label>
 
                         </div>
                     </fieldset>
-
-
-                    <fieldset class="toggle-group">
-
-                        <legend class="key">Align</legend>
-
-                        <div class="toggle-group-inner value">
-
-                            <input class="vis-hidden" type="radio" id="align-start" name="align" value="start" checked>
-                            <label class="btn" for="align-start">
-                                <span class="button-label vis-hidden">Align: Start</span>
-                                <svg class="button-icon" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 0h16v1H0z"></path><path fill="currentColor" stroke="currentColor" d="M3.5 2.5h3v7h-3zm5 0h3v5h-3z"></path></svg>
-                            </label>
-
-                            <input class="vis-hidden" type="radio" id="align-center" name="align" value="center">
-                            <label class="btn" for="align-center">
-                                <span class="button-label vis-hidden">Align: Center</span>
-                                <svg data-icon="AlignItemsCenterRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" stroke="currentColor" d="M3.5 3.5h3v8h-3zm5 1h3v6h-3z"></path><path fill="currentColor" d="M0 7h16v1H0z"></path></svg>
-                            </label>
-
-                            <input class="vis-hidden" type="radio" id="align-end" name="align" value="end">
-                            <label class="btn" for="align-end">
-                                <span class="button-label vis-hidden">Align: End</span>
-                                <svg data-icon="AlignItemsEndRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 15h16v1H0z"></path><path fill="currentColor" stroke="currentColor" d="M3.5 6.5h3v7h-3zm5 2h3v5h-3z"></path></svg>
-                            </label>
-
-                            <input class="vis-hidden" type="radio" id="align-stretch" name="align" value="stretch">
-                            <label class="btn" for="align-stretch">
-                                <span class="button-label vis-hidden">Align: Stretch</span>
-                                <svg data-icon="AlignItemsStretchRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 0h16v1H0zm0 15h16v1H0z"></path><path fill="currentColor" stroke="currentColor" d="M3.5 2.5h3v11h-3zm5 0h3v11h-3z"></path></svg>
-                            </label>
-
-                            <input class="vis-hidden" type="radio" id="align-baseline" name="align" value="baseline">
-                            <label class="btn" for="align-baseline">
-                                <span class="button-label vis-hidden">Align: Baseline</span>
-                                <svg data-icon="AlignItemsBaselineRow" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M0 7h16v1H0z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3H8v7h4V3zm-1 1H9v3h2V4zM7 3H3v9h4V3zM6 4H4v3h2V4z" fill="currentColor"></path></svg>
-                            </label>
-
-                        </div>
-                    </fieldset>
-
-                    <label class="key" for="select">Select</label>
-                    <div class="dropdown-wrapper">
-                        <select id="select" class="btn">
-                            <option value="a">a</option>
-                            <option value="b">b</option>
-                            <option value="c">c</option>
-                            <option value="d">d</option>
-                        </select>
-                        <svg width="12" height="12" viewBox='0 0 12 12'><path d='M3 7l2.25.007h1.5L9 7l-3 3-3-3zm0-2l2.25-.007h1.5L9 5 6 2 3 5z' fill='currentColor'></path></svg>
-                    </div>
-
                 </div>
             </details>
         `;

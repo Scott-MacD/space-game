@@ -55,6 +55,10 @@ const Camera = define("Camera", Box2, {
         }
     },
 
+    get tracking() {
+        return this._tracking;
+    },
+
     get zoom() {
         return this._zoom;
     },
@@ -124,6 +128,10 @@ const Camera = define("Camera", Box2, {
         ctx.font = "11px VT323";
         ctx.fillStyle = "magenta";
         ctx.fillText(`[${Math.floor(x)}, ${Math.floor(y)}]`, half(width) + 2.5, half(height) - 2.5);
+    },
+
+    getMeta(actor) {
+        return this.actorMeta.get(actor);
     },
 
     update() {
@@ -202,7 +210,8 @@ const Camera = define("Camera", Box2, {
     },
 
     track(entity) {
-        this.focus(entity);
+        if (entity) this.focus(entity);
+        
         this._lastX = this.x;
         this._lastY = this.y;
         this._tracking = entity;

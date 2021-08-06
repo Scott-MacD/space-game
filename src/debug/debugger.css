@@ -181,7 +181,8 @@ input:focus {
     border-color: var(--accentColor);
 }
 
-input:disabled {
+.field:disabled,
+.field.-disabled {
     background: transparent;
     border-color: transparent;
     border-bottom: 1px dotted var(--inputBorderColor);
@@ -196,6 +197,9 @@ input:disabled {
     line-height: 1.25em;
     padding: 0.125rem 0.75rem;
     margin: 0 -0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
 }
 
 .tree li:hover {
@@ -215,11 +219,12 @@ input:disabled {
 }
 
 .tree li[data-rendered="true"]::after {
-    content: " (rendered)";
-    font-size: 0.675em;
+    content: " R";
     color: green;
     text-transform: uppercase;
     font-weight: bold;
+    font-size: 0.85em;
+    display: block;
 }
 
 .btn {

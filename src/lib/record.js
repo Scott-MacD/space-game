@@ -16,6 +16,12 @@ function init(props) {
     return this;
 }
 
+function uuidv4() {
+    return '00-0-4-1-000'.replace(/[^-]/g,
+            s => ((Math.random() + ~~s) * 0x10000 >> s).toString(16).padStart(4, '0')
+    );
+}
+
 export function define(name, ...args) {
     
     function Record() {}
@@ -23,6 +29,8 @@ export function define(name, ...args) {
 
     const records = [Record];
     const initializers = [];
+    const idBase = uuidv4();
+    let instanceNum = 0;
 
     prototype.is = is;
     prototype.init = init;
@@ -68,6 +76,7 @@ export function define(name, ...args) {
         create: {
             value: function(props) {
                 const record = new Record;
+                record.id = `${idBase}_${(instanceNum++).toString(16)}`;
 
                 if (props) {
                     Object.keys(props).forEach(key => {

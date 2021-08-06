@@ -81,7 +81,7 @@ const world = World.create();
         mouseScreenPos.y = e.y;
 
         if (!mouseDown) return;
-        camera.tracking = null;
+        camera.track(null);
         camera.x -= e.movementX;
         camera.y -= e.movementY;
     });
