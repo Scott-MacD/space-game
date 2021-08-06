@@ -178,8 +178,8 @@ const Camera = define("Camera", Box2, {
         }
 
         if (screenPos === SCREEN_POS.RELATIVE) {
-            meta.renderX += actor.leftEdge * this.zoom;
-            meta.renderY += actor.topEdge * this.zoom;
+            meta.renderX += meta.bounds.leftEdge;
+            meta.renderY += meta.bounds.topEdge;
         }
         
         if (parentMeta) {
@@ -217,16 +217,16 @@ const Camera = define("Camera", Box2, {
         this._tracking = entity;
     },
 
-    getWorldPosition(screenPos, vec2 = Vec2.create()) {
-        vec2.x = screenPos.x - this.offset.x * this.zoom;
-        vec2.y = screenPos.y - this.offset.y * this.zoom;
-        return vec2;
+    getWorldPosition(screenPos, worldPos = Vec2.create()) {
+        worldPos.x = (screenPos.x - this.offset.x) / this.zoom;
+        worldPos.y = (screenPos.y - this.offset.y) / this.zoom;
+        return worldPos;
     },
 
-    getScreenPosition(worldPos, vec2 = Vec2.create()) {
-        vec2.x = worldPos.x + this.offset.x * this.zoom;
-        vec2.y = worldPos.y + this.offset.y * this.zoom;
-        return vec2;
+    getScreenPosition(worldPos, screenPos = Vec2.create()) {
+        screenPos.x = (worldPos.x * this.zoom) + this.offset.x;
+        screenPos.y = (worldPos.y * this.zoom) + this.offset.y;
+        return screenPos;
     }
 
 });

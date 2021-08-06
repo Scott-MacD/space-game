@@ -26,7 +26,7 @@ const World = define("World", Entity, {
     },
 
     render(deltaT, camera) {
-        const {ctx, width, height, offset} = camera;
+        const {ctx, width, height, offset, zoom} = camera;
         
         if (!this.spriteLoaded) {
             this.spriteLoaded = this.sprite.complete && this.sprite.naturalHeight !== 0;
@@ -40,7 +40,7 @@ const World = define("World", Entity, {
         if (!this.texturePattern) this.texturePattern = ctx.createPattern(this.sprite, "repeat");
 
         ctx.rect(0, 0, width, height);
-        ctx.translate(offset.x, offset.y);
+        ctx.translate(offset.x * zoom, offset.y * zoom);
         ctx.fillStyle = this.texturePattern;
         ctx.fill();
     }
