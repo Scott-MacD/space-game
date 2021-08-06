@@ -55,7 +55,9 @@ const world = World.create();
         minX: world.left,
         minY: world.top,
         maxX: world.right,
-        maxY: world.bottom
+        maxY: world.bottom,
+        minZoom: 0.1,
+        maxZoom: 4
     });
 
     camera.focus(ships[0]);
