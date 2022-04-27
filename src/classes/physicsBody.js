@@ -4,6 +4,9 @@ import Vec2 from "./vec2.js";
 const PhysicsBody = define("PhysicsBody", Vec2, {
     
     mass: 1,
+    friction: 0,
+    restingVelocity: 0.01,
+
     acceleration: null,
     velocity: null,
     childPhysics: null,
@@ -23,11 +26,21 @@ const PhysicsBody = define("PhysicsBody", Vec2, {
         this.velocity.x += this.acceleration.x * deltaT;
         this.velocity.y += this.acceleration.y * deltaT;
 
-        this.x += this.velocity.x * deltaT;
-        this.y += this.velocity.y * deltaT;
+        this.velocity.x *= (1 - this.friction);
+        this.velocity.y *= (1 - this.friction);
 
         this.acceleration.x = 0;
         this.acceleration.y = 0;
+
+        if (this.velocity.tailLengthSqr <= this.restingVelocity**2) {
+            this.velocity.x = 0;
+            this.velocity.y = 0;
+
+            return;
+        }
+
+        this.x += this.velocity.x * deltaT;
+        this.y += this.velocity.y * deltaT;
     },
 
     applyForce({ x, y }, scale = 1) {

@@ -45,6 +45,7 @@ const world = World.create();
 
     const player = ships[0];
     player.addBehavior(playerControl);
+    player.friction = 0.025;
 
     const canvas = document.getElementById("display");
 
