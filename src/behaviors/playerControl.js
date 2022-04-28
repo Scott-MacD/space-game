@@ -8,7 +8,7 @@ const RIGHT = {x: 1, y: 0};
 
 export default function playerControl(deltaT) {
 
-    const scale = 300;
+    const scale = 20;
 
     loadConfig.then(({keys}) => {
         if (io.checkInput(CONTEXTS.SHIP, keys.ship.accelerate)) this.applyForce(UP, scale);

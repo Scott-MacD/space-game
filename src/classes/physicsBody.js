@@ -23,8 +23,8 @@ const PhysicsBody = define("PhysicsBody", Vec2, {
     },
 
     updatePhysics(deltaT = 0) {
-        this.velocity.x += this.acceleration.x * deltaT;
-        this.velocity.y += this.acceleration.y * deltaT;
+        this.velocity.x += this.acceleration.x;
+        this.velocity.y += this.acceleration.y;
 
         this.velocity.x *= (1 - this.friction);
         this.velocity.y *= (1 - this.friction);

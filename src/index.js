@@ -96,15 +96,15 @@ const world = World.create();
     window.bugger = bugger;
 
     clock.update = function update(deltaT) {
-        ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 8);
+        ships[1].applyForce(Vec2.fromPoints(ships[1], camera), 2);
 
         target2.x = (ships[0].x + ships[1].x) * 0.5;
         target2.y = (ships[0].y + ships[1].y) * 0.5;
-        ships[2].applyForce(Vec2.fromPoints(ships[2], target2), 3);
+        ships[2].applyForce(Vec2.fromPoints(ships[2], target2), 1);
 
         target3.x = (mouseWorldPos.x + camera.x) * 0.5;
         target3.y = (mouseWorldPos.y + camera.y) * 0.5;
-        ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 3);
+        ships[3].applyForce(Vec2.fromPoints(ships[3], target3), 1);
 
         tileGrid.panTo(camera);
         tileGrid.highlightTileAtWorldPos(mouseWorldPos);

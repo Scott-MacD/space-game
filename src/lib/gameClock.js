@@ -17,8 +17,10 @@ const gameClock = {
     render: noOp,
 
     tick(t) {
+        const timeSinceLastFrame = (t - this.lastTime) / 1000;
+        
         if (this.playState === PLAY_STATE.PLAYING) {
-            this.accumulatedTime += (t - this.lastTime) / 1000;
+            this.accumulatedTime += timeSinceLastFrame;
 
             if (this.accumulatedTime > 1) {
                 this.accumulatedTime = 1;
@@ -30,7 +32,7 @@ const gameClock = {
             }
         }
 
-        this.render(t);
+        this.render(timeSinceLastFrame);
         this.lastTime = t;
     },
 
