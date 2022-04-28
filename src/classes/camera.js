@@ -2,8 +2,9 @@ import { define } from "../lib/record.js";
 import Box2, {boxCollides} from "./box2.js";
 import Vec2 from "./vec2.js";
 import { SCREEN_POS } from "./actor.js";
+import Entity from "./entity.js";
 
-const Camera = define("Camera", Box2, {
+const Camera = define("Camera", Entity, {
 
     ctx: null,
     canvas: null,
@@ -12,6 +13,8 @@ const Camera = define("Camera", Box2, {
     maxX: Infinity,
     minY: -Infinity,
     maxY: Infinity,
+    friction: 0.1,
+    restingVelocity: 0.05,
 
     _zoom: 1,
     minZoom: 1,
@@ -134,16 +137,19 @@ const Camera = define("Camera", Box2, {
         return this.actorMeta.get(actor);
     },
 
-    update() {
+    update(deltaT = 0) {
         this.clear();
+        this.behaviors?.forEach(behavior => behavior.call(this, deltaT));
         if (this._tracking) {
-            if ((this._lastX !== this.x) || (this._lastY !== this.y)) {
-                this._tracking = false;
-            } else {
-                this.focus(this._tracking);
+            // if ((this._lastX !== this.x) || (this._lastY !== this.y)) {
+            //     this._tracking = false;
+            // } else {
+                this.applyForce(Vec2.fromPoints(this, this._tracking));
                 this._lastX = this.x;
                 this._lastY = this.y;
-            }
+            // }
+        } else {
+            this.updatePhysics(deltaT);
         }
     },
 
