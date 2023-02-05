@@ -73,7 +73,7 @@ const world = World.create();
     world.addChild(tileGrid, 0, 0);
 
     let mouseDown = false;
-    let lastMousePos = Vec2.create();
+    let mouseMovement = Vec2.create();
 
     canvas.addEventListener("mousedown", e => {
         mouseDown = true;
@@ -83,12 +83,16 @@ const world = World.create();
     function releaseMouse(e) {
         if (!mouseDown) return;
         mouseDown = false;
-        camera.applyForce(Vec2.fromPoints(mouseScreenPos, lastMousePos), 1000);
+        camera.velocity.x = mouseMovement.x * 75;
+        camera.velocity.y = mouseMovement.y * 75;
     }
 
     canvas.addEventListener("mouseup", releaseMouse);
     canvas.addEventListener("mouseleave", releaseMouse);
     canvas.addEventListener("mousemove", e => {
+        mouseMovement.x -= e.movementX;
+        mouseMovement.y -= e.movementY;
+
         mouseScreenPos.x = e.x;
         mouseScreenPos.y = e.y;
 
@@ -130,9 +134,9 @@ const world = World.create();
         camera.drawCenter();
         camera.getWorldPosition(mouseScreenPos, mouseWorldPos);
         camera.render(cursorActor, deltaT, {screenPos: SCREEN_POS.ABSOLUTE});
-        
-        lastMousePos.x = mouseScreenPos.x;
-        lastMousePos.y = mouseScreenPos.y;
+
+        mouseMovement.x = 0;
+        mouseMovement.y = 0;
     }
 
     clock.play();

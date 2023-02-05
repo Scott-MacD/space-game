@@ -13,7 +13,7 @@ const Camera = define("Camera", Entity, {
     maxX: Infinity,
     minY: -Infinity,
     maxY: Infinity,
-    friction: 0.1,
+    friction: 0.15,
     restingVelocity: 0.05,
 
     _zoom: 1,
@@ -222,6 +222,21 @@ const Camera = define("Camera", Entity, {
         this._lastY = this.y;
         this._tracking = entity;
     },
+
+    // throw(pointA, pointB, deltaT) {
+    //     this.velocity.x = 
+    // },
+
+    // setTargetRestingPosition() {
+    //     const fFriction = 1 - this.friction;
+    //     const ticks = Math.log(this.restingVelocity / Math.abs(this.velocity.tailLength)) / Math.log(fFriction);
+        
+    //     // integrate to determine resting position
+    //     // http://mikestoolbox.com/powersum.html
+    //     const sum = (Math.pow(fFriction, ticks + 1) - 1) / (fFriction - 1);
+    //     this._targetPos.x = this.x + this.velocity.x * fFriction * sum;
+    //     this._targetPos.y = this.y + this.velocity.y * fFriction * sum;
+    // },
 
     getWorldPosition(screenPos, worldPos = Vec2.create()) {
         worldPos.x = (screenPos.x - this.offset.x) / this.zoom;

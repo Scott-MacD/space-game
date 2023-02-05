@@ -51,6 +51,10 @@ const PhysicsBody = define("PhysicsBody", Vec2, {
     applyImpulse({ x, y }, scale = 1) {
         this.velocity.x += x * scale / this.mass;
         this.velocity.y += y * scale / this.mass;
+    },
+
+    applyTorque() {
+
     }
 });
 
